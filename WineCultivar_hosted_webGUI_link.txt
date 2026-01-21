@@ -1,0 +1,14 @@
+Wine Cultivar Origin Prediction System - Submission Details
+============================================================
+
+Name: [Your Name Here]
+Matric Number: [Your Matric Number Here]
+
+Machine Learning Algorithm Used: Random Forest Classifier
+Model Persistence Method: Joblib
+
+Live URL of Hosted Application: [Insert URL after deployment]
+GitHub Repository Link: https://github.com/kingW930/wine-cultivatar-origin-prediction-system.git
+
+============================================================
+Submission Date: January 2026

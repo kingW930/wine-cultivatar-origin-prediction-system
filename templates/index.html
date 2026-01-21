@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Cultivar Origin Prediction System</title>
+    <meta name="description" content="Predict wine cultivar origin using machine learning based on chemical properties">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">🍷</div>
+            <h1>Wine Cultivar Origin Prediction</h1>
+            <p class="subtitle">Predict wine origin using machine learning analysis of chemical properties</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Prediction Form -->
+            <div class="card form-card">
+                <h2>Enter Wine Chemical Properties</h2>
+                <form action="/predict" method="POST" class="prediction-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="alcohol">Alcohol</label>
+                            <input type="number" step="0.01" name="alcohol" id="alcohol" 
+                                   value="{{ input_values.alcohol if input_values else '' }}" 
+                                   placeholder="e.g., 13.0" required>
+                            <span class="hint">Typical range: 11-15%</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="malic_acid">Malic Acid</label>
+                            <input type="number" step="0.01" name="malic_acid" id="malic_acid" 
+                                   value="{{ input_values.malic_acid if input_values else '' }}" 
+                                   placeholder="e.g., 2.0" required>
+                            <span class="hint">Typical range: 0.7-5.8</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="flavanoids">Flavanoids</label>
+                            <input type="number" step="0.01" name="flavanoids" id="flavanoids" 
+                                   value="{{ input_values.flavanoids if input_values else '' }}" 
+                                   placeholder="e.g., 2.5" required>
+                            <span class="hint">Typical range: 0.3-5.1</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="color_intensity">Color Intensity</label>
+                            <input type="number" step="0.01" name="color_intensity" id="color_intensity" 
+                                   value="{{ input_values.color_intensity if input_values else '' }}" 
+                                   placeholder="e.g., 5.0" required>
+                            <span class="hint">Typical range: 1.3-13.0</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hue">Hue</label>
+                            <input type="number" step="0.01" name="hue" id="hue" 
+                                   value="{{ input_values.hue if input_values else '' }}" 
+                                   placeholder="e.g., 1.0" required>
+                            <span class="hint">Typical range: 0.5-1.7</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="proline">Proline</label>
+                            <input type="number" step="0.01" name="proline" id="proline" 
+                                   value="{{ input_values.proline if input_values else '' }}" 
+                                   placeholder="e.g., 1000" required>
+                            <span class="hint">Typical range: 280-1680</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="predict-btn">
+                        <span class="btn-icon">🔬</span>
+                        Predict Cultivar Origin
+                    </button>
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            {% if prediction %}
+            <div class="card result-card success">
+                <div class="result-header">
+                    <span class="result-icon">✓</span>
+                    <h2>Prediction Result</h2>
+                </div>
+                <div class="prediction-result">
+                    <div class="cultivar-badge">{{ prediction }}</div>
+                    <p class="confidence">Confidence: <strong>{{ confidence }}</strong></p>
+                </div>
+                
+                {% if probabilities %}
+                <div class="probability-section">
+                    <h3>Probability Distribution</h3>
+                    <div class="probability-bars">
+                        {% for cultivar, prob in probabilities.items() %}
+                        <div class="prob-item">
+                            <span class="prob-label">{{ cultivar }}</span>
+                            <div class="prob-bar-container">
+                                <div class="prob-bar" style="width: {{ prob }}"></div>
+                            </div>
+                            <span class="prob-value">{{ prob }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="card result-card error">
+                <div class="result-header">
+                    <span class="result-icon">⚠</span>
+                    <h2>Error</h2>
+                </div>
+                <p class="error-message">{{ error }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Info Card -->
+            <div class="card info-card">
+                <h2>About This System</h2>
+                <div class="info-content">
+                    <div class="info-item">
+                        <span class="info-icon">🤖</span>
+                        <div>
+                            <strong>Algorithm</strong>
+                            <p>Random Forest Classifier</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">📊</span>
+                        <div>
+                            <strong>Dataset</strong>
+                            <p>UCI Wine Dataset (178 samples)</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🎯</span>
+                        <div>
+                            <strong>Features Used</strong>
+                            <p>6 chemical properties</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🏷️</span>
+                        <div>
+                            <strong>Classes</strong>
+                            <p>3 wine cultivars (origins)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Wine Cultivar Origin Prediction System | Machine Learning Project</p>
+        </footer>
+    </div>
+</body>
+</html>
